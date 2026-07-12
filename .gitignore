@@ -5,3 +5,4 @@
 /.php-cs-fixer.cache
 /coverage/
 *.png
+.idea

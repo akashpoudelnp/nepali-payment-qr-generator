@@ -128,11 +128,13 @@ class FonepayQrGenerator implements QrGeneratorInterface
                 if ($crc & 0x8000) {
                     $crc = ($crc << 1) ^ 0x1021;
                 } else {
-                    $crc = $crc << 1;
+                    $crc <<= 1;
                 }
+
+                $crc &= 0xFFFF;
             }
         }
 
-        return strtoupper(dechex($crc & 0xFFFF));
+        return strtoupper(dechex($crc));
     }
 }

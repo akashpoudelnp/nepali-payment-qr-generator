@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.0.0 — 2024-07-12
+## v1.0.0 — 2026-07-12
 
 - Initial release
 - Fonepay EMVCo QR generation (tag26 `01_02` and `07` formats)

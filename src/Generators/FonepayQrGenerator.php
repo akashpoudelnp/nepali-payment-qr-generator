@@ -46,7 +46,7 @@ class FonepayQrGenerator implements QrGeneratorInterface
             $qr .= sprintf('37%02d%s', strlen($pan), $pan);
         }
 
-        if ($data->getTag26Format() === '07' && $data->getTag26Identifier() !== null) {
+        if ($data->getTag26Identifier() !== null) {
             $tag26Id = $data->getTag26Identifier();
             $fpData = sprintf(
                 '00%02d%s07%02d%s',
@@ -103,7 +103,7 @@ class FonepayQrGenerator implements QrGeneratorInterface
 
     private function renderQrImage(string $qrString): string
     {
-        $scale = $this->config['qr_scale'] ?? 10;
+        $scale = $this->config['qr_scale'] ?? 15;
 
         $options = new QROptions([
             'outputType'   => QRCode::OUTPUT_IMAGE_PNG,
@@ -135,6 +135,6 @@ class FonepayQrGenerator implements QrGeneratorInterface
             }
         }
 
-        return strtoupper(dechex($crc));
+        return strtoupper(sprintf('%04X', $crc));
     }
 }

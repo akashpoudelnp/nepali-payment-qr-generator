@@ -12,14 +12,13 @@ class PaymentQrParser
 {
     public static function parse(string $qrString): PaymentQROutput
     {
-        $data = self::parseToData($qrString);
-        $txnId = self::extractTxnId($qrString);
+        $result = self::parseToData($qrString);
 
         return new PaymentQROutput(
             qrString: $qrString,
-            txnId: $txnId ?? '',
+            txnId: $result['txn_id'],
             type: PaymentQRType::Fonepay,
-            data: $data,
+            data: $result['data'],
         );
     }
 
@@ -43,9 +42,13 @@ class PaymentQrParser
         return self::parse($decoded);
     }
 
-    private static function parseToData(string $qrString): PaymentQRData
+    /**
+     * @return array{data: PaymentQRData, txn_id: string}
+     */
+    private static function parseToData(string $qrString): array
     {
         $data = PaymentQRData::new();
+        $txnId = '';
         $pos = 0;
         $len = strlen($qrString);
 
@@ -84,12 +87,12 @@ class PaymentQrParser
                     $data->setMerchantCity($value);
                     break;
                 case '62':
-                    self::parseAdditionalData($data, $value);
+                    $txnId = self::parseAdditionalData($data, $value);
                     break;
             }
         }
 
-        return $data;
+        return ['data' => $data, 'txn_id' => $txnId];
     }
 
     private static function parseFonepayData(PaymentQRData $data, string $value): void
@@ -118,8 +121,9 @@ class PaymentQrParser
         }
     }
 
-    private static function parseAdditionalData(PaymentQRData $data, string $value): void
+    private static function parseAdditionalData(PaymentQRData $data, string $value): string
     {
+        $txnId = '';
         $pos = 0;
         $len = strlen($value);
 
@@ -136,44 +140,13 @@ class PaymentQrParser
             $pos += $valueLen;
 
             match ($tag) {
+                '02' => $txnId = $subValue,
                 '07' => $data->setTerminalId($subValue),
                 '08' => $data->setRemarks($subValue),
                 default => null,
             };
         }
-    }
 
-    private static function extractTxnId(string $qrString): ?string
-    {
-        $pos = strpos($qrString, '62');
-        if ($pos === false) {
-            return null;
-        }
-
-        $addDataLen = (int) substr($qrString, $pos + 2, 2);
-        $addData = substr($qrString, $pos + 4, $addDataLen);
-
-        $pos = 0;
-        $len = strlen($addData);
-
-        while ($pos + 4 <= $len) {
-            $tag = substr($addData, $pos, 2);
-            $valueLen = (int) substr($addData, $pos + 2, 2);
-            $pos += 4;
-
-            if ($pos + $valueLen > $len) {
-                break;
-            }
-
-            $value = substr($addData, $pos, $valueLen);
-
-            if ($tag === '02') {
-                return $value;
-            }
-
-            $pos += $valueLen;
-        }
-
-        return null;
+        return $txnId;
     }
 }

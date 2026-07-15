@@ -1,5 +1,11 @@
 # Nepali Payment QR Generator
 
+[![Latest Version](https://img.shields.io/packagist/v/akashpoudelnp/nepali-payment-qr-generator?style=flat-square)](https://packagist.org/packages/akashpoudelnp/nepali-payment-qr-generator)
+[![Total Downloads](https://img.shields.io/packagist/dt/akashpoudelnp/nepali-payment-qr-generator?style=flat-square)](https://packagist.org/packages/akashpoudelnp/nepali-payment-qr-generator)
+[![PHP Version](https://img.shields.io/packagist/php-v/akashpoudelnp/nepali-payment-qr-generator?style=flat-square)](https://packagist.org/packages/akashpoudelnp/nepali-payment-qr-generator)
+[![License](https://img.shields.io/github/license/akashpoudelnp/nepali-payment-qr-generator?style=flat-square)](https://github.com/akashpoudelnp/nepali-payment-qr-generator/blob/main/LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/akashpoudelnp/nepali-payment-qr-generator?style=flat-square)](https://github.com/akashpoudelnp/nepali-payment-qr-generator)
+
 Generate and parse Nepali payment QR codes (Fonepay, with more providers coming soon).
 
 Produces **EMVCo-compliant QR strings** and renders them as **PNG images**. The parser can decode both EMVCo strings and QR images back into structured data.
